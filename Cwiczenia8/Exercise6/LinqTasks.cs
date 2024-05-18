@@ -1,4 +1,5 @@
-﻿using Exercise6.Models;
+﻿using System.Xml.Linq;
+using Exercise6.Models;
 
 namespace Exercise6
 {
@@ -251,7 +252,7 @@ namespace Exercise6
         {
             var methodSyntax = Emps
                 .GroupBy(x => x.Job)
-                .Select(x => new { Praca = Emps });
+                .Select(x => new {Praca = x.Key, LiczbaPracownikow = x.Count()});
             
             IEnumerable<object> result = methodSyntax;
             return result;
@@ -263,7 +264,9 @@ namespace Exercise6
         /// </summary>
         public static bool Task8()
         {
-            bool result = false;
+            var methodSyntax = Emps.Select(x => x.Job).Contains("Backend programmer");
+            
+            bool result = methodSyntax;
             return result;
         }
 
@@ -273,7 +276,12 @@ namespace Exercise6
         /// </summary>
         public static Emp Task9()
         {
-            Emp result = null;
+            var methodSyntax = Emps
+                .Where(x => x.Job == "Frontend programmer")
+                .OrderByDescending(x => x.HireDate)
+                .FirstOrDefault();
+                
+            Emp result = methodSyntax;
             return result;
         }
 
@@ -284,7 +292,11 @@ namespace Exercise6
         /// </summary>
         public static IEnumerable<object> Task10()
         {
-            IEnumerable<object> result = null;
+            var methodSyntax = Emps
+                .Select(x => new { x.Ename, x.Job, x.HireDate })
+                .Union(new[] { new { Ename = "Brak wartości", Job = (string)null, HireDate = (DateTime?)null } });
+            
+            IEnumerable<object> result = methodSyntax;
             return result;
         }
 
