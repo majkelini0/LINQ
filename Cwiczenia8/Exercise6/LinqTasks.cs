@@ -264,7 +264,9 @@ namespace Exercise6
         /// </summary>
         public static bool Task8()
         {
-            var methodSyntax = Emps.Select(x => x.Job).Contains("Backend programmer");
+            var methodSyntax = Emps
+                .Select(x => x.Job)
+                .Contains("Backend programmer");
             
             bool result = methodSyntax;
             return result;
@@ -313,7 +315,22 @@ namespace Exercise6
         /// </summary>
         public static IEnumerable<object> Task11()
         {
-            IEnumerable<object> result = null;
+            // var methodSyntax = Emps
+            //     .GroupBy(x => x.Deptno)
+            //     .Where(x => x.Count() > 1)
+            //     .Select(x => new { name = x.Key, numOfEmployees = x.Count() })
+            //     .ToList();
+            var methodSyntax = Emps
+                .Join(
+                    Depts,
+                    Emps => Emps.Deptno,
+                    Depts => Depts.Deptno,
+                    (Emps, Depts) => new { Depts.Dname, Emps })
+                .GroupBy(x => x.Dname)
+                .Where(x => x.Count() > 1)
+                .Select(x => new { name = x.Key, numOfEmployees = x.Count() });
+
+            IEnumerable<object> result = methodSyntax;
             return result;
         }
 
@@ -326,7 +343,9 @@ namespace Exercise6
         /// </summary>
         public static IEnumerable<Emp> Task12()
         {
-            IEnumerable<Emp> result = null;
+            //var methodSyntax = 
+
+            IEnumerable<Emp> result = Emps.Task12();
             return result;
         }
 
@@ -350,14 +369,32 @@ namespace Exercise6
         /// </summary>
         public static IEnumerable<Dept> Task14()
         {
-            IEnumerable<Dept> result = null;
-            //result =
+            var methodSyntax = Depts
+                .Select(dept => new 
+                {
+                    Dept = dept,
+                    EmployeeCount = Emps.Count(emp => emp.Deptno == dept.Deptno)
+                })
+                .Where(x => x.EmployeeCount == 5 || x.EmployeeCount == 0)
+                .Select(x => x.Dept)
+                .OrderBy(x => x.Dname);
+            
+            IEnumerable<Dept> result = methodSyntax;
             return result;
         }
     }
 
     public static class CustomExtensionMethods
     {
+        public static IEnumerable<Emp> Task12(this IEnumerable<Emp> empss)
+        {
+            // Metoda powinna zwrócić tylko tych pracowników, którzy mają min. 1 bezpośredniego podwładnego.
+            // Pracownicy powinny w ramach kolekcji być posortowani po nazwisku (rosnąco) i pensji (malejąco).
+            return empss
+                .Where(manager => empss.Any(empl => empl.Mgr == manager))
+                .OrderBy(x => x.Ename)
+                .ThenByDescending(x => x.Salary);
+        }
         //Put your extension methods here
     }
 }
