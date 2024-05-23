@@ -358,8 +358,10 @@ namespace Exercise6
         /// </summary>
         public static int Task13(int[] arr)
         {
-            int result = 0;
-            //result=
+            int result = arr.GroupBy(x => x)
+                .First(group => group.Count() % 2 != 0)
+                .Key;
+
             return result;
         }
 
